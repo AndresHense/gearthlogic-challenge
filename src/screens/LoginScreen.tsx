@@ -12,15 +12,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Link as ReactLink } from 'react-router-dom';
 import { login } from '../actions/userActions';
+import { useAppDispatch, useAppSelector } from '../hooks';
 
 const LoginScreen = () => {
   document.title = 'Login';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const userLogin = useSelector((state) => state.userLogin);
+  const userLogin = useAppSelector((state) => state.userLogin);
   const { userId, loading, error } = userLogin;
 
   useEffect(() => {
@@ -35,7 +36,7 @@ const LoginScreen = () => {
   };
 
   return (
-    <VStack>
+    <VStack justify='center' h='100vh'>
       <form onSubmit={submitHandler}>
         <VStack
           alignItems='start'

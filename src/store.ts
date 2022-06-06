@@ -17,7 +17,7 @@ import {
 const userIdFromStorage = getUserInfo();
 const tokenFromStorage = getToken();
 
-export default configureStore({
+export const store = configureStore({
   reducer: {
     productList: ProductListReducer,
     productUpdate: ProductUpdateReducer,
@@ -39,3 +39,6 @@ export default configureStore({
     },
   },
 });
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

@@ -1,16 +1,9 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { LinkContainer } from 'react-router-bootstrap';
-// migrate to chakra
-import {
-  Button,
-  Table,
-  Row,
-  Col,
-  ListGroup,
-  ListGroupItem,
-  Card,
-} from 'react-bootstrap';
+import { HStack, Icon, Link as LinkContainer, Table } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
+import { FaEdit, FaTrash } from 'react-icons/fa';
+
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   listProducts,
@@ -18,27 +11,31 @@ import {
   createProduct,
 } from '../actions/productActions';
 import { PRODUCT_CREATE_RESET } from '../constants/productConstants';
+import Loader from '../components/Loader';
+import Message from '../components/Message';
+import { Button } from '@chakra-ui/react';
+import { useAppDispatch, useAppSelector } from '../hooks';
 
 const ProductListScreen = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const params = useParams();
   const pageNumber = params.pageNumber || 1;
 
-  const userLogin = useSelector((state) => state.userLogin);
+  const userLogin = useAppSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  const productList = useSelector((state) => state.productList);
-  const { loading, error, products, page, pages } = productList;
+  const productList = useAppSelector((state) => state.productList);
+  const { products } = productList;
 
-  const productDelete = useSelector((state) => state.productDelete);
+  const productDelete = useAppSelector((state) => state.productDelete);
   const {
     success: successDelete,
     loading: loadingDelete,
     error: errorDelete,
   } = productDelete;
 
-  const productCreate = useSelector((state) => state.productCreate);
+  const productCreate = useAppSelector((state) => state.productCreate);
   const {
     success: successCreate,
     loading: loadingCreate,
@@ -62,7 +59,7 @@ const ProductListScreen = () => {
     if (successCreate) {
       navigate(`/product/${createdProduct._id}/edit`);
     } else {
-      dispatch(listProducts('', pageNumber));
+      dispatch(listProducts());
     }
   }, [
     dispatch,
@@ -79,7 +76,7 @@ const ProductListScreen = () => {
       dispatch(deleteProduct(id));
     }
   };
-  const createIncomeHandler = () => {
+  const createProductHandler = () => {
     dispatch(createProduct('income'));
   };
   const createOutcomeHandler = () => {
@@ -87,19 +84,15 @@ const ProductListScreen = () => {
   };
   return (
     <>
-      <Col className=''>
+      <HStack>
         <Button
-          className='my-3 mx-2'
-          onClick={createIncomeHandler}
+          onClick={createProductHandler}
           variant='success'
           style={{ color: 'black' }}
         >
-          <i className='fas fa-plus'> New Income</i>
+          New Product
         </Button>
-        <Button className='my-3' onClick={createOutcomeHandler}>
-          <i className='fas fa-plus'> New Outcome</i>
-        </Button>
-      </Col>
+      </HStack>
       {loadingDelete && <Loader />}
       {errorDelete && <Message variant='danger'>{errorDelete}</Message>}
       {loadingCreate && <Loader />}
@@ -110,7 +103,7 @@ const ProductListScreen = () => {
         <Message variant='danger'>{error}</Message>
       ) : (
         <>
-          <Table striped bordered hover responsive>
+          <Table>
             <thead>
               <tr>
                 <th>Name</th>
@@ -126,17 +119,19 @@ const ProductListScreen = () => {
                   <td>${product.category}</td>
                   <td>{product.price}</td>
                   <td>
-                    <LinkContainer to={`/product/${product._id}/edit`}>
-                      <Button variant='light' className='btn-sm'>
-                        <i className='fas fa-edit'></i>
+                    <LinkContainer
+                      as={Link}
+                      to={`/product/${product._id}/edit`}
+                    >
+                      <Button variant='light'>
+                        <Icon as={FaEdit} />
                       </Button>
                     </LinkContainer>
                     <Button
                       variant='danger'
-                      className='btn-sm'
                       onClick={() => deleteHandler(product._id)}
                     >
-                      <i className='fas fa-trash'></i>
+                      <Icon as={FaTrash} />
                     </Button>
                   </td>
                 </tr>

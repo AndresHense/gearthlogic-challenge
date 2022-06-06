@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
   FormControl,
@@ -11,6 +10,7 @@ import {
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { detailsProduct, updateProduct } from '../actions/productActions';
 import { PRODUCT_UPDATE_RESET } from '../constants/productConstants';
+import { useAppDispatch, useAppSelector } from '../hooks';
 
 const EditProduct = () => {
   const [name, setName] = useState('');
@@ -19,16 +19,16 @@ const EditProduct = () => {
   const [image, setImage] = useState(null);
   const [category, setCategory] = useState('');
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const productDetails = useSelector((state) => state.productDetails);
+  const productDetails = useAppSelector((state) => state.productDetails);
   const { product, loading, error } = productDetails;
 
-  const userLogin = useSelector((state) => state.userLogin);
+  const userLogin = useAppSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  const productUpdate = useSelector((state) => state.productUpdate);
+  const productUpdate = useAppSelector((state) => state.productUpdate);
   const {
     success: successUpdate,
     loading: loadingUpdate,
@@ -73,9 +73,7 @@ const EditProduct = () => {
 
   return (
     <>
-      <Link to='/Productlist' className='btn btn-light my-3'>
-        Go Back
-      </Link>
+      <Link to='/producs'>Go Back</Link>
       {loading ? (
         <Text>Loading</Text>
       ) : error ? (
@@ -126,7 +124,7 @@ const EditProduct = () => {
                 <Input
                   type='number'
                   value={price}
-                  onChange={(e) => setPrice(e.target.value)}
+                  onChange={(e) => setPrice(parseInt(e.target.value))}
                   placeholder='Enter description'
                 ></Input>
               </FormControl>
