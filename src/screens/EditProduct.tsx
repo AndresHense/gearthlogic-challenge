@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Box,
   Button,
   FormControl,
   FormLabel,
@@ -17,7 +18,7 @@ const EditProduct = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState(0);
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState('');
   const [category, setCategory] = useState('');
 
   const dispatch = useAppDispatch();
@@ -43,15 +44,15 @@ const EditProduct = () => {
       if (successUpdate) {
         dispatch({ type: PRODUCT_UPDATE_RESET });
         dispatch(detailsProduct(id));
-        navigate('/productlist');
-      } else if (!product || product._id !== id) {
+        navigate('/products');
+      } else if (!product || product.id !== id) {
         dispatch(detailsProduct(id));
       } else {
-        setName(product.name);
-        setDescription(product.description);
-        setCategory(product.category);
-        setPrice(product.price);
-        setImage(product.image);
+        setName(product.info.nombre);
+        setDescription(product.info.descripcion);
+        setCategory(product.info.categoria);
+        setPrice(product.info.precio);
+        setImage(product.info.imagen);
       }
     } else {
       navigate('/login');
@@ -63,18 +64,18 @@ const EditProduct = () => {
 
     dispatch(
       updateProduct(id, {
-        name,
-        description,
-        category,
-        price,
-        image,
+        nombre: name,
+        descripcion: description,
+        categoria: category,
+        precio: price,
+        imagen: image,
       })
     );
   };
 
   return (
     <>
-      <Link p={4} as={ReactLink} to='/products'>
+      <Link bg='#e4e4e4' p={4} as={ReactLink} to='/products'>
         Go Back
       </Link>
       {loading ? (
@@ -82,68 +83,80 @@ const EditProduct = () => {
       ) : error ? (
         <Text>{error}</Text>
       ) : (
-        <VStack>
-          <h1>Edit Product</h1>
-          {loadingUpdate && <Text>Loading</Text>}
-          {errorUpdate && <Text>{errorUpdate}</Text>}
-          {loading ? (
-            <Text>Loading</Text>
-          ) : error ? (
-            <Text>{error}</Text>
-          ) : (
-            <form onSubmit={submitHandler}>
-              <FormControl>
-                <FormLabel>Nombre</FormLabel>
-                <Input
-                  type='text'
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder='Enter name'
-                ></Input>
-              </FormControl>
+        <VStack spacing={4} pt={8}>
+          <Box display='flex' alignItems='start' flexDirection='column'>
+            <Text fontSize='4xl' fontWeight='bold'>
+              Edit Product
+            </Text>
+            {loadingUpdate && <Text>Loading</Text>}
+            {errorUpdate && <Text>{errorUpdate}</Text>}
+            {loading ? (
+              <Text>Loading</Text>
+            ) : error ? (
+              <Text>{error}</Text>
+            ) : (
+              <form onSubmit={submitHandler}>
+                <FormControl py={3}>
+                  <FormLabel>Nombre</FormLabel>
+                  <Input
+                    type='text'
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder='Enter name'
+                  ></Input>
+                </FormControl>
 
-              <FormControl>
-                <FormLabel>Categoria</FormLabel>
-                <Input
-                  type='text'
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  placeholder='Enter category'
-                ></Input>
-              </FormControl>
+                <FormControl py={3}>
+                  <FormLabel>Categoria</FormLabel>
+                  <Input
+                    type='text'
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    placeholder='Enter category'
+                  ></Input>
+                </FormControl>
 
-              <FormControl>
-                <FormLabel>Description</FormLabel>
-                <Input
-                  type='text'
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder='Enter description'
-                ></Input>
-              </FormControl>
+                <FormControl py={3}>
+                  <FormLabel>Description</FormLabel>
+                  <Input
+                    type='text'
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder='Enter description'
+                  ></Input>
+                </FormControl>
 
-              <FormControl>
-                <FormLabel>Precio</FormLabel>
-                <Input
-                  type='number'
-                  value={price}
-                  onChange={(e) => setPrice(parseInt(e.target.value))}
-                  placeholder='Enter description'
-                ></Input>
-              </FormControl>
+                <FormControl py={3}>
+                  <FormLabel>Precio</FormLabel>
+                  <Input
+                    type='number'
+                    value={price}
+                    onChange={(e) => setPrice(parseInt(e.target.value))}
+                    placeholder='Enter description'
+                  ></Input>
+                </FormControl>
 
-              <FormControl>
-                <FormLabel>Imagen</FormLabel>
-                <input
-                  type='input'
-                  value={image}
-                  onChange={(e) => setImage(e.target.files[0])}
-                />
-              </FormControl>
+                <FormControl py={3}>
+                  <FormLabel>Imagen</FormLabel>
+                  <Input
+                    type='text'
+                    value={image}
+                    onChange={(e) => setImage(e.target.value)}
+                  />
+                </FormControl>
 
-              <Button type='submit'>Actualizar</Button>
-            </form>
-          )}
+                <Button
+                  mt={3}
+                  mx={0}
+                  size='lg'
+                  colorScheme='blue'
+                  type='submit'
+                >
+                  Actualizar
+                </Button>
+              </form>
+            )}
+          </Box>
         </VStack>
       )}
     </>

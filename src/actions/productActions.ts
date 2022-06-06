@@ -58,7 +58,7 @@ export const detailsProduct = (id: string) => async (dispatch, getState) => {
     );
     dispatch({
       type: PRODUCT_DETAILS_SUCCESS,
-      payload: data,
+      payload: { id, info: data },
     });
   } catch (error) {
     dispatch({

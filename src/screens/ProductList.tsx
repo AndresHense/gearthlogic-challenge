@@ -23,6 +23,7 @@ import {
   deleteProduct,
   createProduct,
 } from '../actions/productActions';
+import { logout } from '../actions/userActions';
 import { PRODUCT_CREATE_RESET } from '../constants/productConstants';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
@@ -99,10 +100,19 @@ const ProductListScreen = () => {
       })
     );
   };
-  console.log('categoreis', categories);
-  console.log(products);
+
   return (
-    <VStack spacing={12} py={12}>
+    <VStack spacing={8}>
+      <Button
+        alignSelf='start'
+        m={5}
+        colorScheme='blackAlpha'
+        onClick={() => {
+          dispatch(logout());
+        }}
+      >
+        Logout
+      </Button>
       <HStack>
         <Button size='lg' px={12} onClick={createProductHandler}>
           New Product
