@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   HStack,
   Icon,
   Link as LinkContainer,
+  Select,
   Table,
   TableContainer,
   Tbody,
@@ -32,6 +33,8 @@ const ProductListScreen = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const params = useParams();
+  const [categories, setCategories] = useState([]);
+  const [filter, setFilter] = useState('');
 
   const userLogin = useAppSelector((state) => state.userLogin);
   const { userInfo, loading, error } = userLogin;
@@ -64,6 +67,11 @@ const ProductListScreen = () => {
       navigate(`/product/${createdProductId}/edit`);
     } else {
       dispatch(listProducts());
+      const categoriesArray = [
+        ...new Set(products.map((product) => product.info.categoria)),
+      ];
+      //console.log('array cat', categoriesArray);
+      setCategories(categoriesArray);
     }
   }, [
     dispatch,
@@ -73,6 +81,7 @@ const ProductListScreen = () => {
     successCreate,
     createdProductId,
   ]);
+  useEffect(() => {}, [categories]);
 
   const deleteHandler = (id) => {
     if (window.confirm('Are you sure?')) {
@@ -90,12 +99,22 @@ const ProductListScreen = () => {
       })
     );
   };
-
+  console.log('categoreis', categories);
+  console.log(products);
   return (
     <VStack spacing={12} py={12}>
-      <Button size='lg' onClick={createProductHandler}>
-        New Product
-      </Button>
+      <HStack>
+        <Button size='lg' px={12} onClick={createProductHandler}>
+          New Product
+        </Button>
+        <Select onChange={(e) => setFilter(e.target.value)}>
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </Select>
+      </HStack>
       {loadingDelete && <Loader />}
       {errorDelete && <Message variant='danger'>{errorDelete}</Message>}
       {loadingCreate && <Loader />}
@@ -116,23 +135,28 @@ const ProductListScreen = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {products.map((product) => (
-                <Tr key={product.id}>
-                  <Td>{product.info.nombre}</Td>
-                  <Td>{product.info.categoria}</Td>
-                  <Td>{product.info.precio}</Td>
-                  <Td>
-                    <LinkContainer as={Link} to={`/product/${product.id}/edit`}>
-                      <Button variant='light'>
-                        <Icon as={FaEdit} />
+              {products
+                .filter((p) => p.info.categoria === filter || filter === '')
+                .map((product) => (
+                  <Tr key={product.id}>
+                    <Td>{product.info.nombre}</Td>
+                    <Td>{product.info.categoria}</Td>
+                    <Td>{product.info.precio}</Td>
+                    <Td>
+                      <LinkContainer
+                        as={Link}
+                        to={`/product/${product.id}/edit`}
+                      >
+                        <Button variant='light'>
+                          <Icon as={FaEdit} />
+                        </Button>
+                      </LinkContainer>
+                      <Button onClick={() => deleteHandler(product.id)}>
+                        <Icon as={FaTrash} color='red' />
                       </Button>
-                    </LinkContainer>
-                    <Button onClick={() => deleteHandler(product.id)}>
-                      <Icon as={FaTrash} color='red' />
-                    </Button>
-                  </Td>
-                </Tr>
-              ))}
+                    </Td>
+                  </Tr>
+                ))}
             </Tbody>
           </Table>
         </TableContainer>
