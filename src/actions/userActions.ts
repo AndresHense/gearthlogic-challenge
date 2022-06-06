@@ -55,37 +55,3 @@ export const logout = () => (dispatch) => {
   dispatch({ type: USER_LOGOUT });
   dispatch({ type: USER_DETAILS_RESET });
 };
-
-export const getUserDetails =
-  (id: string) => async (dispatch: any, getState: any) => {
-    try {
-      dispatch({ type: USER_DETAILS_REQUEST });
-
-      const {
-        userLogin: { token },
-      } = getState();
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const { data } = await axios.get(
-        `http://localhost:8080/user/${id}`,
-        config
-      );
-
-      dispatch({ type: USER_DETAILS_SUCCESS, payload: data });
-    } catch (error) {
-      const message =
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message;
-      if (message === 'Not authorized, token failed') {
-        dispatch(logout());
-      }
-      dispatch({
-        type: USER_DETAILS_FAIL,
-        payload: message,
-      });
-    }
-  };

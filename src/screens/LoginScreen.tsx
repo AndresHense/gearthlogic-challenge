@@ -25,10 +25,10 @@ const LoginScreen = () => {
   const { userInfo, loading, error } = userLogin;
 
   useEffect(() => {
-    if (userInfo.localId) {
+    if (userInfo?.localId) {
       navigate('/products');
     }
-  }, [userInfo.localId]);
+  }, [userInfo?.localId]);
 
   const submitHandler = (e: any) => {
     e.preventDefault();

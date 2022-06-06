@@ -1,6 +1,18 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { HStack, Icon, Link as LinkContainer, Table } from '@chakra-ui/react';
+import {
+  HStack,
+  Icon,
+  Link as LinkContainer,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+  VStack,
+} from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 
@@ -20,7 +32,6 @@ const ProductListScreen = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const params = useParams();
-  const pageNumber = params.pageNumber || 1;
 
   const userLogin = useAppSelector((state) => state.userLogin);
   const { userInfo, loading, error } = userLogin;
@@ -40,7 +51,7 @@ const ProductListScreen = () => {
     success: successCreate,
     loading: loadingCreate,
     error: errorCreate,
-    product: createdProduct,
+    productId: createdProductId,
   } = productCreate;
 
   useEffect(() => {
@@ -50,7 +61,7 @@ const ProductListScreen = () => {
     }
 
     if (successCreate) {
-      navigate(`/product/${createdProduct._id}/edit`);
+      navigate(`/product/${createdProductId}/edit`);
     } else {
       dispatch(listProducts());
     }
@@ -60,8 +71,7 @@ const ProductListScreen = () => {
     successDelete,
     userInfo,
     successCreate,
-    createdProduct,
-    pageNumber,
+    createdProductId,
   ]);
 
   const deleteHandler = (id) => {
@@ -70,20 +80,22 @@ const ProductListScreen = () => {
     }
   };
   const createProductHandler = () => {
-    dispatch(createProduct('income'));
+    dispatch(
+      createProduct({
+        categoria: '',
+        nombre: '',
+        precio: 0,
+        imagen: '',
+        descripcion: '',
+      })
+    );
   };
 
   return (
-    <>
-      <HStack>
-        <Button
-          onClick={createProductHandler}
-          variant='success'
-          style={{ color: 'black' }}
-        >
-          New Product
-        </Button>
-      </HStack>
+    <VStack spacing={12} py={12}>
+      <Button size='lg' onClick={createProductHandler}>
+        New Product
+      </Button>
       {loadingDelete && <Loader />}
       {errorDelete && <Message variant='danger'>{errorDelete}</Message>}
       {loadingCreate && <Loader />}
@@ -93,42 +105,39 @@ const ProductListScreen = () => {
       ) : error ? (
         <Message variant='danger'>{error}</Message>
       ) : (
-        <>
+        <TableContainer w='100%' alignSelf='center' px={32}>
           <Table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Price</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
+            <Thead>
+              <Tr>
+                <Th>Name</Th>
+                <Th>Category</Th>
+                <Th>Price</Th>
+                <Th></Th>
+              </Tr>
+            </Thead>
+            <Tbody>
               {products.map((product) => (
-                <tr key={product.nombre}>
-                  <td>{product.nombre}</td>
-                  <td>{product.categoria}</td>
-                  <td>{product.precio}</td>
-                  <td>
-                    <LinkContainer
-                      as={Link}
-                      to={`/product/${product._id}/edit`}
-                    >
+                <Tr key={product.id}>
+                  <Td>{product.info.nombre}</Td>
+                  <Td>{product.info.categoria}</Td>
+                  <Td>{product.info.precio}</Td>
+                  <Td>
+                    <LinkContainer as={Link} to={`/product/${product.id}/edit`}>
                       <Button variant='light'>
                         <Icon as={FaEdit} />
                       </Button>
                     </LinkContainer>
-                    <Button onClick={() => deleteHandler(product._id)}>
+                    <Button onClick={() => deleteHandler(product.id)}>
                       <Icon as={FaTrash} color='red' />
                     </Button>
-                  </td>
-                </tr>
+                  </Td>
+                </Tr>
               ))}
-            </tbody>
+            </Tbody>
           </Table>
-        </>
+        </TableContainer>
       )}
-    </>
+    </VStack>
   );
 };
 

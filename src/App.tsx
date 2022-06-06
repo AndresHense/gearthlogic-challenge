@@ -12,7 +12,7 @@ function App() {
         <Route path='/' element={<LoginScreen />} />
         <Route path='/login' element={<LoginScreen />} />
         <Route path='/products' element={<ProductList />} />
-        <Route path='/edit' element={<EditProduct />} />
+        <Route path='/product/:id/edit' element={<EditProduct />} />
       </Routes>
     </Flex>
   );

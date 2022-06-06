@@ -27,10 +27,14 @@ export const listProducts = () => async (dispatch, getState) => {
     const { data } = await axios.get(
       `https://test-lucas-594ea.firebaseio.com/products.json?auth=${userInfo.idToken}`
     );
-
+    console.log(data);
+    const payload = Object.entries(data).map((element) => {
+      return { id: element[0], info: element[1] };
+    });
+    console.log(payload);
     dispatch({
       type: PRODUCT_LIST_SUCCESS,
-      payload: Object.values(data),
+      payload,
     });
   } catch (error) {
     dispatch({
@@ -50,7 +54,7 @@ export const detailsProduct = (id: string) => async (dispatch, getState) => {
       userLogin: { userInfo },
     } = getState();
     const { data } = await axios.get(
-      `https://test-lucas-594ea.firebaseio.com/products/${id}.json?auth=${userInfo.token}`
+      `https://test-lucas-594ea.firebaseio.com/products/${id}.json?auth=${userInfo.idToken}`
     );
     dispatch({
       type: PRODUCT_DETAILS_SUCCESS,
@@ -75,12 +79,12 @@ export const createProduct = (product) => async (dispatch, getState) => {
     } = getState();
 
     const { data } = await axios.post(
-      `https://test-lucas-594ea.firebaseio.com/products.json?auth=${userInfo.token}`,
-      { product }
+      `https://test-lucas-594ea.firebaseio.com/products.json?auth=${userInfo.idToken}`,
+      product
     );
     dispatch({
       type: PRODUCT_CREATE_SUCCESS,
-      payload: data,
+      payload: data?.name,
     });
   } catch (error) {
     const message =
@@ -105,7 +109,7 @@ export const deleteProduct = (id: string) => async (dispatch, getState) => {
     } = getState();
 
     await axios.delete(
-      `https://test-lucas-594ea.firebaseio.com/products/${id}.json?auth=${userInfo.token}`
+      `https://test-lucas-594ea.firebaseio.com/products/${id}.json?auth=${userInfo.idToken}`
     );
     dispatch({
       type: PRODUCT_DELETE_SUCCESS,
@@ -138,7 +142,7 @@ export const updateProduct =
         },
       };
       const { data } = await axios.put(
-        `https://test-lucas-594ea.firebaseio.com/products/${id}.json?auth=${userInfo.token}`,
+        `https://test-lucas-594ea.firebaseio.com/products/${id}.json?auth=${userInfo.idToken}`,
         product,
         config
       );

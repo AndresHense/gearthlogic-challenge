@@ -4,10 +4,11 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Link,
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link as ReactLink, useNavigate, useParams } from 'react-router-dom';
 import { detailsProduct, updateProduct } from '../actions/productActions';
 import { PRODUCT_UPDATE_RESET } from '../constants/productConstants';
 import { useAppDispatch, useAppSelector } from '../hooks';
@@ -73,7 +74,9 @@ const EditProduct = () => {
 
   return (
     <>
-      <Link to='/producs'>Go Back</Link>
+      <Link p={4} as={ReactLink} to='/products'>
+        Go Back
+      </Link>
       {loading ? (
         <Text>Loading</Text>
       ) : error ? (
@@ -135,7 +138,7 @@ const EditProduct = () => {
                   type='input'
                   value={image}
                   onChange={(e) => setImage(e.target.files[0])}
-                ></input>
+                />
               </FormControl>
 
               <Button type='submit'>Actualizar</Button>
