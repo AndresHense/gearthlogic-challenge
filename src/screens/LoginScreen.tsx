@@ -80,22 +80,6 @@ const LoginScreen = () => {
           >
             Ingresar
           </Button>
-          <Stack direction={{ base: 'column', xl: 'row' }}>
-            <Text textStyle='h3'>
-              ¿No tienes una cuenta?
-              <Link
-                as={ReactLink}
-                to='/register'
-                color='white'
-                fontSize='lg'
-                _hover={{ color: 'black' }}
-                fontStyle='italic'
-              >
-                {' '}
-                Crea una nueva cuenta aqui
-              </Link>
-            </Text>
-          </Stack>
         </VStack>
       </form>
     </VStack>
