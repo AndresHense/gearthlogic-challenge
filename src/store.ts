@@ -32,7 +32,6 @@ export const store = configureStore({
     userLogin: {
       userInfo: userInfoFromStorage,
       token: tokenFromStorage,
-      loading: true,
     },
     userDetails: {
       user: {},

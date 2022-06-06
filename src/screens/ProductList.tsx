@@ -23,7 +23,7 @@ const ProductListScreen = () => {
   const pageNumber = params.pageNumber || 1;
 
   const userLogin = useAppSelector((state) => state.userLogin);
-  const { userInfo, loading } = userLogin;
+  const { userInfo, loading, error } = userLogin;
 
   const productList = useAppSelector((state) => state.productList);
   const { products } = productList;
@@ -72,9 +72,7 @@ const ProductListScreen = () => {
   const createProductHandler = () => {
     dispatch(createProduct('income'));
   };
-  const createOutcomeHandler = () => {
-    dispatch(createProduct('outcome'));
-  };
+
   return (
     <>
       <HStack>
@@ -107,10 +105,10 @@ const ProductListScreen = () => {
             </thead>
             <tbody>
               {products.map((product) => (
-                <tr key={product._id}>
-                  <td>{product.name}</td>
-                  <td>${product.category}</td>
-                  <td>{product.price}</td>
+                <tr key={product.nombre}>
+                  <td>{product.nombre}</td>
+                  <td>{product.categoria}</td>
+                  <td>{product.precio}</td>
                   <td>
                     <LinkContainer
                       as={Link}
@@ -120,11 +118,8 @@ const ProductListScreen = () => {
                         <Icon as={FaEdit} />
                       </Button>
                     </LinkContainer>
-                    <Button
-                      variant='danger'
-                      onClick={() => deleteHandler(product._id)}
-                    >
-                      <Icon as={FaTrash} />
+                    <Button onClick={() => deleteHandler(product._id)}>
+                      <Icon as={FaTrash} color='red' />
                     </Button>
                   </td>
                 </tr>
