@@ -22,13 +22,13 @@ const LoginScreen = () => {
   const dispatch = useAppDispatch();
 
   const userLogin = useAppSelector((state) => state.userLogin);
-  const { userId, loading, error } = userLogin;
+  const { userInfo, loading, error } = userLogin;
 
   useEffect(() => {
-    if (userId) {
-      navigate('/');
+    if (userInfo.localId) {
+      navigate('/products');
     }
-  }, [userId]);
+  }, [userInfo.localId]);
 
   const submitHandler = (e: any) => {
     e.preventDefault();

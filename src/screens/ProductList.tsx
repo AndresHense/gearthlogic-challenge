@@ -23,7 +23,7 @@ const ProductListScreen = () => {
   const pageNumber = params.pageNumber || 1;
 
   const userLogin = useAppSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  const { userInfo, loading } = userLogin;
 
   const productList = useAppSelector((state) => state.productList);
   const { products } = productList;
@@ -42,13 +42,6 @@ const ProductListScreen = () => {
     error: errorCreate,
     product: createdProduct,
   } = productCreate;
-
-  let totalAmount = 0;
-  if (products)
-    totalAmount = products.reduce(
-      (acc, p) => acc + (p.type === 'INCOME' ? p.amount : -p.amount),
-      0
-    );
 
   useEffect(() => {
     dispatch({ type: PRODUCT_CREATE_RESET });

@@ -19,7 +19,7 @@ export const userLoginReducer = (state = {}, action: any) => {
     case USER_LOGIN_SUCCESS:
       return {
         loading: false,
-        userId: action.payload.userId,
+        userInfo: action.payload,
         token: action.payload.token,
       };
     case USER_LOGIN_FAIL:

@@ -14,7 +14,7 @@ import {
   userLogoutReducer,
 } from './reducers/userReducers';
 
-const userIdFromStorage = getUserInfo();
+const userInfoFromStorage = getUserInfo();
 const tokenFromStorage = getToken();
 
 export const store = configureStore({
@@ -30,8 +30,9 @@ export const store = configureStore({
   },
   preloadedState: {
     userLogin: {
-      userId: userIdFromStorage,
+      userInfo: userInfoFromStorage,
       token: tokenFromStorage,
+      loading: true,
     },
     userDetails: {
       user: {},
