@@ -3,7 +3,6 @@ const TOKEN = 'token';
 
 const getUserInfo = () => {
   const userInfo = localStorage.getItem(USER_INFO);
-  console.log(userInfo, userInfo === 'undefined');
   return userInfo === 'undefined' ? null : JSON.parse(userInfo);
 };
 

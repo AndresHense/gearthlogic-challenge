@@ -27,11 +27,9 @@ export const listProducts = () => async (dispatch, getState) => {
     const { data } = await axios.get(
       `https://test-lucas-594ea.firebaseio.com/products.json?auth=${userInfo.idToken}`
     );
-    console.log(data);
     const payload = Object.entries(data).map((element) => {
       return { id: element[0], info: element[1] };
     });
-    console.log(payload);
     dispatch({
       type: PRODUCT_LIST_SUCCESS,
       payload,

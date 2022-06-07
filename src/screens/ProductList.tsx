@@ -29,6 +29,7 @@ import Loader from '../components/Loader';
 import Message from '../components/Message';
 import { Button } from '@chakra-ui/react';
 import { useAppDispatch, useAppSelector } from '../hooks';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const ProductListScreen = () => {
   const dispatch = useAppDispatch();
@@ -68,11 +69,6 @@ const ProductListScreen = () => {
       navigate(`/product/${createdProductId}/edit`);
     } else {
       dispatch(listProducts());
-      const categoriesArray = [
-        ...new Set(products.map((product) => product.info.categoria)),
-      ];
-      //console.log('array cat', categoriesArray);
-      setCategories(categoriesArray);
     }
   }, [
     dispatch,
@@ -82,6 +78,13 @@ const ProductListScreen = () => {
     successCreate,
     createdProductId,
   ]);
+
+  useEffect(() => {
+    const categoriesArray = [
+      ...new Set(products.map((product) => product.info.categoria)),
+    ];
+    setCategories(categoriesArray);
+  }, [dispatch]);
   useEffect(() => {}, [categories]);
 
   const deleteHandler = (id) => {
@@ -145,28 +148,37 @@ const ProductListScreen = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {products
-                .filter((p) => p.info.categoria === filter || filter === '')
-                .map((product) => (
-                  <Tr key={product.id}>
-                    <Td>{product.info.nombre}</Td>
-                    <Td>{product.info.categoria}</Td>
-                    <Td>{product.info.precio}</Td>
-                    <Td>
-                      <LinkContainer
-                        as={Link}
-                        to={`/product/${product.id}/edit`}
-                      >
-                        <Button variant='light'>
-                          <Icon as={FaEdit} />
+              <AnimatePresence>
+                {products
+                  .filter((p) => p.info.categoria === filter || filter === '')
+                  .map((product) => (
+                    <Tr
+                      as={motion.tr}
+                      key={product.id}
+                      exit={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      initial={{ opacity: 0 }}
+                      transition='0.4s'
+                    >
+                      <Td>{product.info.nombre}</Td>
+                      <Td>{product.info.categoria}</Td>
+                      <Td>{product.info.precio}</Td>
+                      <Td>
+                        <LinkContainer
+                          as={Link}
+                          to={`/product/${product.id}/edit`}
+                        >
+                          <Button variant='light'>
+                            <Icon as={FaEdit} />
+                          </Button>
+                        </LinkContainer>
+                        <Button onClick={() => deleteHandler(product.id)}>
+                          <Icon as={FaTrash} color='red' />
                         </Button>
-                      </LinkContainer>
-                      <Button onClick={() => deleteHandler(product.id)}>
-                        <Icon as={FaTrash} color='red' />
-                      </Button>
-                    </Td>
-                  </Tr>
-                ))}
+                      </Td>
+                    </Tr>
+                  ))}
+              </AnimatePresence>
             </Tbody>
           </Table>
         </TableContainer>

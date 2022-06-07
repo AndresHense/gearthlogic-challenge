@@ -35,7 +35,6 @@ export const login =
       );
 
       dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
-      console.log(data);
       setUserInfo(data);
       setToken(data.idToken);
     } catch (error) {
